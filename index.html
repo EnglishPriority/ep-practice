@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Priority · Practice Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ep-black:#111111;
+  --ep-yellow:#F5C842;
+  --ep-yellow-light:#FDF3C8;
+  --ep-green:#1D9E75;
+  --ep-green-light:#E1F5EE;
+  --ep-green-dark:#085041;
+  --ep-red:#E24B4A;
+  --ep-red-light:#FCEBEB;
+  --ep-red-dark:#501313;
+  --ep-gray:#F4F4F2;
+  --ep-border:#E0E0DC;
+  --ep-text:#111111;
+  --ep-muted:#888880;
+  --radius:10px;
+  --radius-lg:14px;
+}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:#FAFAF8;
+  color:var(--ep-text);
+  min-height:100vh;
+}
+
+/* NAV */
+.nav{
+  background:var(--ep-black);
+  padding:0 1.5rem;
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.nav-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.nav-badge{
+  background:var(--ep-yellow);
+  color:var(--ep-black);
+  font-size:11px;
+  font-weight:600;
+  padding:3px 10px;
+  border-radius:20px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+}
+.nav-title{
+  color:#fff;
+  font-size:15px;
+  font-weight:500;
+}
+.nav-meta{
+  font-size:12px;
+  color:#666;
+  font-family:'DM Mono',monospace;
+}
+
+/* LOADING */
+.loading{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-height:60vh;
+  gap:16px;
+}
+.loading-spinner{
+  width:32px;height:32px;
+  border:2px solid var(--ep-border);
+  border-top-color:var(--ep-yellow);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:13px;color:var(--ep-muted);}
+
+/* ERROR */
+.error-screen{
+  max-width:480px;
+  margin:4rem auto;
+  padding:2rem;
+  text-align:center;
+}
+.error-code{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  color:var(--ep-muted);
+  margin-bottom:8px;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+.error-title{font-size:20px;font-weight:500;margin-bottom:8px;}
+.error-sub{font-size:14px;color:var(--ep-muted);line-height:1.6;}
+
+/* MAIN */
+.main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 4rem;}
+
+/* LESSON HEADER */
+.lesson-header{
+  background:var(--ep-black);
+  border-radius:var(--radius-lg);
+  padding:1.5rem;
+  margin-bottom:1.5rem;
+}
+.lesson-breadcrumb{
+  font-size:11px;
+  color:#666;
+  font-family:'DM Mono',monospace;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  margin-bottom:8px;
+}
+.lesson-title{
+  font-size:22px;
+  font-weight:600;
+  color:#fff;
+  margin-bottom:4px;
+}
+.lesson-sub{font-size:13px;color:#888;margin-bottom:12px;}
+.lesson-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tag{
+  font-size:11px;
+  padding:3px 10px;
+  border-radius:20px;
+  font-weight:500;
+}
+.tag-yellow{background:var(--ep-yellow);color:var(--ep-black);}
+.tag-dark{background:#222;color:var(--ep-yellow);border:0.5px solid #333;}
+
+/* TABS */
+.tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:1.25rem;
+  flex-wrap:wrap;
+}
+.tab{
+  padding:8px 18px;
+  border-radius:var(--radius);
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  border:1px solid var(--ep-border);
+  color:var(--ep-muted);
+  background:#fff;
+  transition:all 0.15s;
+  font-family:'DM Sans',sans-serif;
+}
+.tab:hover{border-color:var(--ep-yellow);color:var(--ep-text);}
+.tab.active{background:var(--ep-black);color:var(--ep-yellow);border-color:var(--ep-black);}
+
+/* PROGRESS */
+.progress-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:1.25rem;
+}
+.progress-wrap{
+  flex:1;height:5px;
+  background:var(--ep-border);
+  border-radius:3px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:var(--ep-yellow);
+  border-radius:3px;
+  transition:width 0.4s ease;
+}
+.progress-label{
+  font-size:12px;
+  color:var(--ep-muted);
+  font-family:'DM Mono',monospace;
+  min-width:48px;
+  text-align:right;
+}
+
+/* QUESTION CARD */
+.q-card{
+  background:#fff;
+  border:1px solid var(--ep-border);
+  border-radius:var(--radius-lg);
+  padding:1.25rem;
+  margin-bottom:1rem;
+  animation:fadeUp 0.2s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.q-meta{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.q-num{font-size:11px;color:var(--ep-muted);font-family:'DM Mono',monospace;}
+.q-pair-badge{
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:20px;
+  background:var(--ep-gray);
+  color:var(--ep-muted);
+  border:1px solid var(--ep-border);
+}
+.q-context{
+  font-size:12px;
+  color:var(--ep-muted);
+  font-style:italic;
+  padding:8px 12px;
+  background:var(--ep-gray);
+  border-radius:var(--radius);
+  margin-bottom:10px;
+  border-left:3px solid var(--ep-yellow);
+  line-height:1.5;
+}
+.q-text{
+  font-size:15px;
+  line-height:1.65;
+  color:var(--ep-text);
+  margin-bottom:1rem;
+}
+.blank{
+  display:inline-block;
+  border-bottom:2px solid var(--ep-yellow);
+  min-width:80px;
+  margin:0 3px;
+  padding:0 4px;
+  color:var(--ep-yellow);
+  font-weight:600;
+  text-align:center;
+}
+
+/* OPTIONS */
+.opts{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:.75rem;
+}
+@media(max-width:480px){.opts{grid-template-columns:1fr;}}
+.opt{
+  padding:11px 14px;
+  border-radius:var(--radius);
+  font-size:13px;
+  color:var(--ep-text);
+  cursor:pointer;
+  text-align:left;
+  line-height:1.4;
+  border:1px solid var(--ep-border);
+  background:var(--ep-gray);
+  transition:border-color 0.1s,background 0.1s;
+  font-family:'DM Sans',sans-serif;
+}
+.opt:hover{border-color:var(--ep-yellow);background:var(--ep-yellow-light);}
+.opt.correct{background:var(--ep-green-light);border-color:var(--ep-green);color:var(--ep-green-dark);cursor:default;}
+.opt.wrong{background:var(--ep-red-light);border-color:var(--ep-red);color:var(--ep-red-dark);cursor:default;}
+
+/* FEEDBACK */
+.feedback{
+  font-size:13px;
+  padding:10px 14px;
+  border-radius:var(--radius);
+  line-height:1.55;
+  margin-top:.5rem;
+}
+.feedback.ok{background:var(--ep-green-light);color:var(--ep-green-dark);border-left:3px solid var(--ep-green);}
+.feedback.bad{background:var(--ep-red-light);color:var(--ep-red-dark);border-left:3px solid var(--ep-red);}
+.rule-box{
+  font-size:12px;
+  padding:8px 12px;
+  border-radius:var(--radius);
+  background:var(--ep-gray);
+  border:1px solid var(--ep-border);
+  color:var(--ep-muted);
+  margin-top:8px;
+  line-height:1.5;
+}
+
+/* SPOT */
+.spot-sentence{
+  font-size:15px;
+  color:var(--ep-text);
+  line-height:2;
+  margin-bottom:.75rem;
+}
+.spot-word{
+  display:inline-block;
+  padding:2px 5px;
+  border-radius:4px;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all 0.1s;
+}
+.spot-word:hover{background:var(--ep-yellow-light);border-bottom-color:var(--ep-yellow);}
+.spot-word.selected{background:var(--ep-yellow-light);border-bottom-color:var(--ep-yellow);color:#8B6D00;font-weight:600;}
+.spot-word.correct-word{background:var(--ep-green-light);border-bottom-color:var(--ep-green);color:var(--ep-green-dark);font-weight:600;}
+.spot-word.wrong-word{background:var(--ep-red-light);border-bottom-color:var(--ep-red);color:var(--ep-red-dark);}
+.spot-hint{font-size:12px;color:var(--ep-muted);font-style:italic;margin-bottom:8px;}
+
+/* BUTTONS */
+.next-btn{
+  background:var(--ep-black);
+  color:var(--ep-yellow);
+  border:none;
+  padding:10px 24px;
+  border-radius:var(--radius);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:1rem;
+  font-family:'DM Sans',sans-serif;
+  transition:background 0.15s;
+}
+.next-btn:hover{background:#222;}
+
+/* SCORE SCREEN */
+.score-screen{
+  background:#fff;
+  border:1px solid var(--ep-border);
+  border-radius:var(--radius-lg);
+  padding:2rem;
+  text-align:center;
+  animation:fadeUp 0.3s ease;
+}
+.score-big{
+  font-size:52px;
+  font-weight:600;
+  color:var(--ep-text);
+  font-family:'DM Mono',monospace;
+  margin-bottom:4px;
+}
+.score-slash{color:var(--ep-border);}
+.score-msg{font-size:14px;color:var(--ep-muted);margin-bottom:1.5rem;line-height:1.5;}
+.score-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:8px;
+  margin-bottom:1.5rem;
+}
+.score-cell{
+  background:var(--ep-gray);
+  border-radius:var(--radius);
+  padding:12px 8px;
+}
+.score-cell-num{font-size:20px;font-weight:600;font-family:'DM Mono',monospace;}
+.score-cell-lbl{font-size:11px;color:var(--ep-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;}
+.replay-btn{
+  background:var(--ep-yellow);
+  color:var(--ep-black);
+  border:none;
+  padding:11px 28px;
+  border-radius:var(--radius);
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  transition:opacity 0.15s;
+}
+.replay-btn:hover{opacity:0.85;}
+
+.section{display:none;}
+.section.active{display:block;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <span class="nav-badge">English Priority</span>
+    <span class="nav-title">Practice Hub</span>
+  </div>
+  <span class="nav-meta" id="nav-meta"></span>
+</nav>
+
+<div class="main">
+  <div id="app"></div>
+</div>
+
+<script>
+const SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/13JRTneo35qKr7OySE_9HbsSf8yTMiFBXIy30sLbjAEA/export?format=csv&gid=0';
+
+const PROGRAM_NAMES = {
+  'BP-OPS': 'Business Program · Operations',
+  'BP-MGR': 'Business Program · Managers',
+  'BP-WL':  'Business Program · Women Leaders',
+  'GE-A1':  'General English · A1',
+  'GE-A2':  'General English · A2',
+  'GE-B1':  'General English · B1',
+  'GE-B2':  'General English · B2',
+};
+
+function getParams() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    program: p.get('program') || '',
+    mod: p.get('mod') || '',
+    lesson: p.get('lesson') || '',
+  };
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).map(line => {
+    const vals = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQ = !inQ; }
+      else if (line[i] === ',' && !inQ) { vals.push(cur.trim()); cur = ''; }
+      else cur += line[i];
+    }
+    vals.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (vals[i] || '').replace(/^"|"$/g,''));
+    return obj;
+  });
+}
+
+function filterRows(rows, params) {
+  return rows.filter(r =>
+    r.program === params.program &&
+    r.mod === params.mod &&
+    r.lesson === params.lesson
+  );
+}
+
+async function init() {
+  const app = document.getElementById('app');
+  const params = getParams();
+
+  if (!params.program || !params.mod || !params.lesson) {
+    app.innerHTML = `<div class="error-screen">
+      <div class="error-code">Missing parameters</div>
+      <div class="error-title">No lesson selected</div>
+      <div class="error-sub">This page needs a program, module, and lesson to load. Access it through your LearnDash lesson link.</div>
+    </div>`;
+    return;
+  }
+
+  app.innerHTML = `<div class="loading"><div class="loading-spinner"></div><div class="loading-text">Loading your practice...</div></div>`;
+
+  let rows;
+  try {
+    const res = await fetch(SHEETS_CSV_URL);
+    const text = await res.text();
+    const all = parseCSV(text);
+    rows = filterRows(all, params);
+  } catch(e) {
+    app.innerHTML = `<div class="error-screen">
+      <div class="error-code">Connection error</div>
+      <div class="error-title">Could not load content</div>
+      <div class="error-sub">Please check your internet connection and try again.</div>
+    </div>`;
+    return;
+  }
+
+  if (!rows.length) {
+    app.innerHTML = `<div class="error-screen">
+      <div class="error-code">${params.program} · M${params.mod} · L${params.lesson}</div>
+      <div class="error-title">Content coming soon</div>
+      <div class="error-sub">This lesson's practice activities are being prepared. Check back after your next class.</div>
+    </div>`;
+    return;
+  }
+
+  const chooseRows = rows.filter(r => r.exercise_type === 'choose');
+  const spotRows   = rows.filter(r => r.exercise_type === 'spot');
+  const lessonTitle = rows[0].lesson_title || 'Practice';
+  const programName = PROGRAM_NAMES[params.program] || params.program;
+
+  document.getElementById('nav-meta').textContent = `${params.program} · M${params.mod} · L${params.lesson}`;
+
+  const levelTag = params.program.includes('B2') ? 'B2' : params.program.includes('B1') ? 'B1' : params.program.includes('A2') ? 'A2' : params.program.includes('A1') ? 'A1' : 'B2';
+
+  let html = `
+    <div class="lesson-header">
+      <div class="lesson-breadcrumb">${programName} · Module ${params.mod} · Lesson ${params.lesson}</div>
+      <div class="lesson-title">${lessonTitle}</div>
+      <div class="lesson-sub">Interactive practice — complete both exercises</div>
+      <div class="lesson-tags">
+        <span class="tag tag-yellow">${levelTag}</span>
+        ${chooseRows.length ? '<span class="tag tag-dark">Choose the verb</span>' : ''}
+        ${spotRows.length   ? '<span class="tag tag-dark">Spot the mistake</span>' : ''}
+      </div>
+    </div>
+    <div class="tabs">
+      ${chooseRows.length ? '<button class="tab active" data-tab="choose">Exercise 1 — Choose the verb</button>' : ''}
+      ${spotRows.length   ? `<button class="tab${!chooseRows.length?' active':''}" data-tab="spot">Exercise 2 — Spot the mistake</button>` : ''}
+    </div>
+    ${chooseRows.length ? `<div class="section${true?' active':''}" id="sec-choose"></div>` : ''}
+    ${spotRows.length   ? `<div class="section" id="sec-spot"></div>` : ''}
+  `;
+
+  app.innerHTML = html;
+
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('sec-' + this.dataset.tab).classList.add('active');
+    });
+  });
+
+  if (chooseRows.length) initChoose(chooseRows);
+  if (spotRows.length)   initSpot(spotRows);
+}
+
+function initChoose(rows) {
+  let state = { current: 0, score: 0, answered: false, results: [] };
+  function render() {
+    const el = document.getElementById('sec-choose');
+    if (!el) return;
+    const pct = Math.round((state.current / rows.length) * 100);
+    let html = `<div class="progress-row">
+      <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <span class="progress-label">${state.current} / ${rows.length}</span>
+    </div>`;
+    if (state.current >= rows.length) {
+      const pctScore = Math.round((state.score / rows.length) * 100);
+      const msg = pctScore >= 80 ? 'Excellent work. You have strong control of these verb pairs.' : pctScore >= 60 ? 'Good progress. Review the pairs you missed before moving on.' : 'Keep practising. Re-read the rules and try again.';
+      html += `<div class="score-screen">
+        <div class="score-big">${state.score}<span class="score-slash">/${rows.length}</span></div>
+        <div class="score-msg">${msg}</div>
+        <button class="replay-btn" onclick="window.chooseReset()">Try again</button>
+      </div>`;
+      el.innerHTML = html;
+      document.querySelector('.progress-fill') && (document.querySelector('.progress-fill').style.width = '100%');
+      return;
+    }
+    const q = rows[state.current];
+    html += `<div class="q-card">
+      <div class="q-meta">
+        <span class="q-num">Q${state.current + 1} of ${rows.length}</span>
+        <span class="q-pair-badge">${q.pair_label}</span>
+      </div>
+      <div class="q-context">${q.context}</div>
+      <div class="q-text">"${q.sentence.replace('___', '<span class="blank">___</span>')}"</div>
+      <div class="opts">
+        <button class="opt${state.answered ? (q.correct === 'A' ? ' correct' : (state.chosen === 'A' ? ' wrong' : '')) : ''}" data-ans="A">${q.opt_a}</button>
+        <button class="opt${state.answered ? (q.correct === 'B' ? ' correct' : (state.chosen === 'B' ? ' wrong' : '')) : ''}" data-ans="B">${q.opt_b}</button>
+      </div>`;
+    if (state.answered) {
+      const ok = state.chosen === q.correct;
+      html += `<div class="feedback ${ok ? 'ok' : 'bad'}">${ok ? '✓ Correct. ' : '✗ Not quite. '}${q.feedback}</div>`;
+      html += `<div class="rule-box">Rule: ${q.rule}</div>`;
+      html += `<button class="next-btn" onclick="window.chooseNext()">${state.current + 1 < rows.length ? 'Next question →' : 'See results →'}</button>`;
+    }
+    html += `</div>`;
+    el.innerHTML = html;
+    if (!state.answered) {
+      el.querySelectorAll('.opt').forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (state.answered) return;
+          state.answered = true;
+          state.chosen = this.dataset.ans;
+          if (state.chosen === q.correct) state.score++;
+          state.results.push(state.chosen === q.correct);
+          render();
+        });
+      });
+    }
+  }
+  window.chooseNext = () => { state.current++; state.answered = false; state.chosen = null; render(); };
+  window.chooseReset = () => { state = { current: 0, score: 0, answered: false, results: [] }; render(); };
+  render();
+}
+
+function initSpot(rows) {
+  let state = { current: 0, score: 0, answered: false, results: [] };
+  function render() {
+    const el = document.getElementById('sec-spot');
+    if (!el) return;
+    const pct = Math.round((state.current / rows.length) * 100);
+    let html = `<div class="progress-row">
+      <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <span class="progress-label">${state.current} / ${rows.length}</span>
+    </div>`;
+    if (state.current >= rows.length) {
+      const pctScore = Math.round((state.score / rows.length) * 100);
+      const msg = pctScore >= 80 ? 'Excellent. You can identify incorrect verb use in context.' : pctScore >= 60 ? 'Good. Review the sentences you missed.' : 'Keep going. Re-read the lesson rules and try again.';
+      html += `<div class="score-screen">
+        <div class="score-big">${state.score}<span class="score-slash">/${rows.length}</span></div>
+        <div class="score-msg">${msg}</div>
+        <div class="score-grid">
+          <div class="score-cell"><div class="score-cell-num">${state.score}</div><div class="score-cell-lbl">Correct</div></div>
+          <div class="score-cell"><div class="score-cell-num">${rows.length - state.score}</div><div class="score-cell-lbl">To review</div></div>
+          <div class="score-cell"><div class="score-cell-num">${pctScore}%</div><div class="score-cell-lbl">Score</div></div>
+        </div>
+        <button class="replay-btn" onclick="window.spotReset()">Try again</button>
+      </div>`;
+      el.innerHTML = html;
+      return;
+    }
+    const q = rows[state.current];
+    const wrongWord = q.opt_a;
+    const correctWord = q.opt_b;
+    const raw = q.sentence;
+    const bracketMatch = raw.match(/\[([^\]]+)\]/);
+    let sentenceHtml = raw;
+    if (bracketMatch) {
+      const wrong = bracketMatch[1];
+      if (state.answered) {
+        const isCorrect = state.clicked === wrong;
+        sentenceHtml = raw.replace(
+          `[${wrong}]`,
+          `<span class="spot-word ${isCorrect ? 'correct-word' : 'wrong-word'}">${wrong}</span>`
+        ).replace(/\[([^\]]+)\]/, '$1');
+        if (!isCorrect) {
+          sentenceHtml = sentenceHtml + ` <span style="font-size:12px;color:var(--ep-green-dark);background:var(--ep-green-light);padding:2px 6px;border-radius:4px;">→ ${correctWord}</span>`;
+        }
+      } else {
+        sentenceHtml = raw.replace(
+          `[${wrong}]`,
+          `<span class="spot-word" data-word="${wrong}">${wrong}</span>`
+        ).replace(/\[([^\]]+)\]/, '$1');
+      }
+    }
+    html += `<div class="q-card">
+      <div class="q-meta">
+        <span class="q-num">Q${state.current + 1} of ${rows.length}</span>
+        <span class="q-pair-badge">${q.pair_label}</span>
+      </div>
+      <div class="q-context">${q.context}</div>
+      <p style="font-size:13px;color:var(--ep-muted);margin-bottom:8px;">Click the word that is incorrect in this sentence:</p>
+      <div class="spot-sentence">"${sentenceHtml}"</div>`;
+    if (!state.answered) html += `<div class="spot-hint">Hint: think about whether this is a procedure, a regular meeting, a first mention, or a quick check.</div>`;
+    if (state.answered) {
+      const ok = state.clicked === wrongWord;
+      html += `<div class="feedback ${ok ? 'ok' : 'bad'}">${ok ? '✓ Correct! ' : `✗ The incorrect word was "${wrongWord}". `}${q.feedback}</div>`;
+      html += `<div class="rule-box">Rule: ${q.rule}</div>`;
+      html += `<button class="next-btn" onclick="window.spotNext()">${state.current + 1 < rows.length ? 'Next question →' : 'See results →'}</button>`;
+    }
+    html += `</div>`;
+    el.innerHTML = html;
+    if (!state.answered) {
+      el.querySelectorAll('.spot-word').forEach(span => {
+        span.addEventListener('click', function() {
+          if (state.answered) return;
+          state.answered = true;
+          state.clicked = this.dataset.word;
+          if (state.clicked === wrongWord) state.score++;
+          state.results.push(state.clicked === wrongWord);
+          render();
+        });
+      });
+    }
+  }
+  window.spotNext = () => { state.current++; state.answered = false; state.clicked = null; render(); };
+  window.spotReset = () => { state = { current: 0, score: 0, answered: false, results: [] }; render(); };
+  render();
+}
+
+init();
+</script>
+</body>
+</html>
